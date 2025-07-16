@@ -1,186 +1,190 @@
-# Akıllı Toplantı Asistanı
+# Intelligent Meeting Assistant
 
-Bu proje, Azure OpenAI ve LangChain kullanarak geliştirilmiş akıllı bir toplantı asistanıdır. Kullanıcıların doğal dil toplantı taleplerini işleyerek yapılandırılmış JSON çıktısı oluşturur.
+This project is an intelligent meeting assistant developed using Azure OpenAI and LangChain. It processes natural language meeting requests and generates structured JSON output.
 
-## 🚀 Özellikler
+## 🚀 Features
 
-- **Doğal Dil İşleme**: Türkçe toplantı taleplerini anlama
-- **Vektör Veritabanı**: ChromaDB ile isim çözümleme
-- **Azure OpenAI Entegrasyonu**: GPT-4o ile gelişmiş AI
-- **Bellek Yönetimi**: ConversationBufferMemory ile konuşma geçmişi
-- **Belirsizlik Çözümleme**: Çoklu isim eşleşmelerinde kullanıcıdan açıklama
-- **ISO 8601 Zaman Formatı**: Standart zaman formatında çıktı
-- **Email Gövdesi Oluşturma**: Otomatik profesyonel email içeriği
+- **Natural Language Processing**: Understanding meeting requests in multiple languages
+- **Vector Database**: Name resolution using ChromaDB
+- **Azure OpenAI Integration**: Advanced AI with GPT-4o
+- **Memory Management**: Conversation history with ConversationBufferMemory
+- **Ambiguity Resolution**: User clarification for multiple name matches
+- **ISO 8601 Time Format**: Standard time format output
+- **Email Body Generation**: Automatic professional email content
 
-## 📋 Gereksinimler
+## 📋 Requirements
 
 - Python 3.8+
-- Azure OpenAI hesabı
-- Gerekli Python paketleri (requirements.txt)
+- Azure OpenAI account
+- Required Python packages (requirements.txt)
 
-## 🛠️ Kurulum
+## 🛠️ Installation
 
-1. **Bağımlılıkları yükleyin:**
+1. **Install dependencies:**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. **Environment değişkenlerini ayarlayın:**
+2. **Set up environment variables:**
 
 ```bash
-# env.example dosyasını .env olarak kopyalayın
+# Copy env.example to .env
 cp env.example .env
 
-# .env dosyasını düzenleyerek Azure OpenAI bilgilerinizi girin
+# Edit .env with your Azure OpenAI credentials
 # AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
 # AZURE_OPENAI_API_KEY=your-api-key-here
 ```
 
-3. **Uygulamayı çalıştırın:**
+3. **Run the application:**
 
 ```bash
 python meeting_assistant_enhanced.py
 ```
 
-## 🔒 Güvenlik
+## 🔒 Security
 
-⚠️ **ÖNEMLİ**: Bu proje artık hardcoded API anahtarları içermiyor. Tüm hassas bilgiler environment değişkenleri ile yönetiliyor.
+⚠️ **IMPORTANT**: This project no longer contains hardcoded API keys. All sensitive information is managed through environment variables.
 
-- API anahtarları ve endpoint'ler `.env` dosyasında saklanır
-- `.env` dosyası `.gitignore` ile Git'e dahil edilmez
-- Test dosyaları da environment değişkenlerini kullanır
+- API keys and endpoints are stored in `.env` file
+- `.env` file is excluded from Git via `.gitignore`
+- Test files also use environment variables
 
-## 🎯 Kullanım
+## 🎯 Usage
 
-### Örnek Toplantı Talepleri
+### Example Meeting Requests
 
 ```
-👤 SİZ: Arda Orçun ve Şahin ile yarın 90 dakikalık proje toplantısı organize et
-👤 SİZ: Ali ve Ahmet ile pazartesi sabah 10:00'da toplantı planla
-👤 SİZ: Ozden ve Emre ile Q3 bütçe görüşmesi yap
-👤 SİZ: Yarın saat 14:00'de Arda ile hızlı sync
+👤 YOU: Schedule a 90-minute project meeting with John and Sarah tomorrow
+👤 YOU: Plan a meeting with Alex and Mike on Monday morning at 10:00
+👤 YOU: Organize Q3 budget review with Lisa and Tom
+👤 YOU: Quick sync with John tomorrow at 2:00 PM
 ```
 
-### Çıktı Formatı
+### Output Format
 
 ```json
 {
-  "body": "Merhaba,\n\nQ3 bütçe görüşmesi için toplantı planladık.\n\nKatılımınızı bekleriz.\n\nSaygılarımızla,",
+  "body": "Hello,\n\nWe have scheduled a Q3 budget review meeting.\n\nWe look forward to your participation.\n\nBest regards,",
   "endTime": "2025-07-15T10:30:00+03:00",
   "meeting_duration": 30,
   "startTime": "2025-07-15T10:00:00+03:00",
-  "subject": "Q3 Bütçe Görüşmesi",
+  "subject": "Q3 Budget Review",
   "user_details": [
     {
-      "email_address": "ozden.orkon@company.com.tr",
-      "full_name": "Özden Gebizli Orkon",
+      "email_address": "lisa.smith@company.com",
+      "full_name": "Lisa Smith",
       "id": 12
     },
     {
-      "email_address": "emre.celik@company.com.tr",
-      "full_name": "Emre Çelik",
+      "email_address": "tom.jones@company.com",
+      "full_name": "Tom Jones",
       "id": 14
     }
   ]
 }
 ```
 
-## 🔧 Teknik Detaylar
+## 🔧 Technical Details
 
-### Mimari Bileşenler
+### Architecture Components
 
-1. **VectorDatabaseManager**: ChromaDB ile isim arama
-2. **MeetingAssistantTools**: LangChain araçları
-3. **MeetingAssistantAgent**: Ana agent sınıfı
-4. **Pydantic Modeller**: Veri doğrulama
+1. **VectorDatabaseManager**: Name search with ChromaDB
+2. **MeetingAssistantTools**: LangChain tools
+3. **MeetingAssistantAgent**: Main agent class
+4. **Pydantic Models**: Data validation
 
-### İş Akışı
+### Workflow
 
-1. **Bilgi Çıkarma**: Kullanıcı talebinden toplantı bilgilerini çıkar
-2. **İsim Arama**: Vektör veritabanında katılımcıları ara
-3. **Belirsizlik Çözümleme**: Çoklu eşleşmelerde kullanıcıdan açıklama iste
-4. **Zaman Çözümleme**: Tarih/saat bilgilerini ISO 8601 formatına çevir
-5. **Email Oluşturma**: Profesyonel email gövdesi oluştur
-6. **JSON Çıktısı**: Final toplantı JSON'ını üret
+1. **Information Extraction**: Extract meeting information from user request
+2. **Name Search**: Search for participants in vector database
+3. **Ambiguity Resolution**: Request clarification for multiple matches
+4. **Time Resolution**: Convert date/time information to ISO 8601 format
+5. **Email Creation**: Generate professional email body
+6. **JSON Output**: Produce final meeting JSON
 
-### Örnek Veri
+### Sample Data
 
-Sistem 25 örnek kullanıcı ile gelir:
+The system comes with 25 sample users for testing purposes.
 
-- Ahmet Yılmaz, Ahmet Kaya, Ahmet Özkan
-- Ali Şahin, Ali Demir, Ali Can Yılmaz
-- Şahin Koç, Şahin Nicat, Mehmet Şahin
-- Arda Orçun, Ege Gülünay
-- Ve daha fazlası...
+## 🎨 Features
 
-## 🎨 Özellikler
+### Intelligent Name Resolution
 
-### Akıllı İsim Çözümleme
+- Name search using vector similarity
+- Multi-language character support
+- Typo tolerance
+- Clarification requests for multiple matches
 
-- Vektör benzerliği ile isim arama
-- Türkçe karakter desteği
-- Yazım hatalarını tolere etme
-- Çoklu eşleşmelerde açıklama isteme
+### Time Processing
 
-### Zaman İşleme
+- Natural language date/time understanding
+- Business hours validation (09:00-17:00)
+- Default 30-minute duration
+- UTC+3 timezone
 
-- Doğal dil tarih/saat anlama
-- İş saatleri kontrolü (09:00-17:00)
-- Varsayılan 30 dakika süre
-- UTC+3 zaman dilimi
+### Email Generation
 
-### Email Oluşturma
+- Professional email body content
+- Purpose-appropriate content
+- Participant information inclusion
 
-- Profesyonel Türkçe email gövdesi
-- Toplantı amacına uygun içerik
-- Katılımcı bilgilerini dahil etme
+## 🔍 Test Scenarios
 
-## 🔍 Test Senaryoları
-
-### Senaryo 1: Basit Toplantı
+### Scenario 1: Simple Meeting
 
 ```
-Kullanıcı: "Arda Orçun ile yarın toplantı planla"
-Sonuç: Doğrudan JSON çıktısı
+User: "Schedule a meeting with John tomorrow"
+Result: Direct JSON output
 ```
 
-### Senaryo 2: Belirsiz İsim
+### Scenario 2: Ambiguous Name
 
 ```
-Kullanıcı: "Ali ile toplantı yap"
-Sistem: "Hangi Ali'yi kastettiniz?"
-Kullanıcı: "Ali Şahin"
-Sonuç: JSON çıktısı
+User: "Meeting with Alex"
+System: "Which Alex do you mean?"
+User: "Alex Smith"
+Result: JSON output
 ```
 
-### Senaryo 3: Eksik Bilgi
+### Scenario 3: Missing Information
 
 ```
-Kullanıcı: "Şahin ile pazartesi toplantı"
-Sistem: "Toplantının konusu nedir?"
-Kullanıcı: "Proje durumu"
-Sonuç: JSON çıktısı
+User: "Meeting with Sarah on Monday"
+System: "What is the meeting subject?"
+User: "Project status"
+Result: JSON output
 ```
 
-## 🚨 Hata Yönetimi
+## 🚨 Error Handling
 
-- **API Hataları**: Azure OpenAI bağlantı sorunları
-- **Veri Doğrulama**: Pydantic ile format kontrolü
-- **Belirsizlik**: Kullanıcıdan açıklama isteme
-- **Eksik Bilgi**: Eksik alanlar için soru sorma
+- **API Errors**: Azure OpenAI connection issues
+- **Data Validation**: Format control with Pydantic
+- **Ambiguity**: Request clarification from user
+- **Missing Information**: Ask questions for missing fields
 
-## 📝 Lisans
+## 📝 License
 
-Bu proje eğitim amaçlı geliştirilmiştir.
+This project is developed for educational purposes.
 
-## 🤝 Katkıda Bulunma
+## 🤝 Contributing
 
-1. Fork yapın
-2. Feature branch oluşturun
-3. Değişikliklerinizi commit edin
-4. Pull request gönderin
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Submit a pull request
 
-## 📞 İletişim
+## 📞 Contact
 
-Sorularınız için issue açabilirsiniz.
+For questions, please open an issue in the repository.
+
+## 🔒 Privacy & Data Protection
+
+This project complies with data protection regulations:
+
+- No personal data is stored permanently
+- All sample data is fictional
+- User inputs are processed securely
+- No personal information is logged or exposed
+- Environment variables protect sensitive configuration
